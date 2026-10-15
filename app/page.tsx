@@ -26,6 +26,7 @@ function Monogram() {
 
 export default function Home() {
   const [lang, setLang] = useState<Lang>("en");
+  const [languageReady, setLanguageReady] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("home");
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -34,6 +35,7 @@ export default function Home() {
 
   useEffect(() => {
     try { const saved = localStorage.getItem("portfolio-language"); if (isLanguage(saved)) setLang(saved); } catch { /* Storage is optional. */ }
+    setLanguageReady(true);
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
     }, { rootMargin: "-18% 0px -58% 0px" });
@@ -42,9 +44,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (!languageReady) return;
     document.documentElement.lang = lang;
     try { localStorage.setItem("portfolio-language", lang); } catch { /* Storage is optional. */ }
-  }, [lang]);
+  }, [lang, languageReady]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -62,7 +65,7 @@ export default function Home() {
           {nav[lang].map((label, i) => <a key={ids[i]} href={`#${ids[i]}`} className={active === ids[i] ? "is-active" : ""} aria-current={active === ids[i] ? "location" : undefined}>{label}</a>)}
         </nav>
         <div className="nav-actions">
-          <div className="language-switch" aria-label={t.languageLabel}>{LANGUAGES.map((language, index) => <span className="language-option" key={language}>{index > 0 && <span aria-hidden="true">/</span>}<button lang={language} aria-pressed={lang === language} onClick={() => setLang(language)}>{language.toUpperCase()}</button></span>)}</div>
+          <div className="language-switch" aria-label={t.languageLabel}>{LANGUAGES.map((language, index) => <span className="language-option" key={language}>{index > 0 && <span aria-hidden="true">/</span>}<button lang={language} disabled={!languageReady} aria-pressed={lang === language} onClick={() => setLang(language)}>{language.toUpperCase()}</button></span>)}</div>
           <div className="nav-social-links">
             <a className="nav-social" href={linkedIn} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><Linkedin size={16}/></a>
             <a className="nav-social" href="https://github.com/Tem0Key" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub · Tem0Key"><GitHubIcon size={17}/></a>

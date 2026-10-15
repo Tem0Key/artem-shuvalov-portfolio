@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
-import { ArrowDownRight, ArrowUpRight, Check, LoaderCircle, Mail, Send } from "lucide-react";
-import { LinkedInIcon as Linkedin } from "@/components/social-icons";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { ArrowDownRight, ArrowUpRight, Check, Copy, Info, LoaderCircle, Mail, Send, X } from "lucide-react";
+import { GitHubIcon, LinkedInIcon as Linkedin } from "@/components/social-icons";
 import { STATIC_SITE } from "@/lib/site-config";
 import { contactEs, staticContactCopy } from "@/lib/contact-es";
 import type { Language } from "@/lib/i18n";
@@ -10,6 +10,7 @@ import {
   CONTACT_EMAIL,
   CONTACT_LIMITS,
   CONTACT_LINKEDIN,
+  CONTACT_GITHUB,
   validateContactInput,
   buildContactDraft,
   type ContactErrors,
@@ -77,7 +78,7 @@ const copy = {
   },
 };
 
-type Feedback = "success" | "draft" | "not_configured" | "rate_limited" | "validation" | "failed" | null;
+type Feedback = "success" | "not_configured" | "rate_limited" | "validation" | "failed" | null;
 type VisibleField = Exclude<ContactField, "website">;
 const visibleFields: VisibleField[] = ["name", "email", "company", "role", "jobLink", "message"];
 
@@ -88,10 +89,37 @@ export function ContactSection({ lang }: { lang: Language }) {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [pending, setPending] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
-  const [draft, setDraft] = useState<ReturnType<typeof buildContactDraft> | null>(null);
+  const [draftValues, setDraftValues] = useState<ContactValues | null>(null);
+  const draft = draftValues ? buildContactDraft(draftValues, lang) : null;
+  const [copied, setCopied] = useState<string | null>(null);
+  const [copyFailed, setCopyFailed] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const submitting = useRef(false);
   const submission = useRef<{ payload: string; key: string } | null>(null);
+
+  useEffect(() => {
+    if (!draftValues) return;
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [draftValues]);
+
+  async function copyDraftField(field: string, value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(field);
+      setCopyFailed(false);
+    } catch {
+      setCopied(null);
+      setCopyFailed(true);
+    }
+  }
 
   function updateField(field: ContactField, value: string) {
     const next = { ...values, [field]: value };
@@ -124,8 +152,9 @@ export function ContactSection({ lang }: { lang: Language }) {
     setErrors({});
     setFeedback(null);
     if (STATIC_SITE) {
-      setDraft(buildContactDraft(result.values, lang));
-      setFeedback("draft");
+      setCopied(null);
+      setCopyFailed(false);
+      setDraftValues(result.values);
       return;
     }
     submitting.current = true;
@@ -196,6 +225,11 @@ export function ContactSection({ lang }: { lang: Language }) {
               <span><span className="contact-link-label">{t.linkedinLabel}</span><span className="contact-link-value">{t.linkedin}</span></span>
               <ArrowUpRight size={18} strokeWidth={1.5} className="contact-link-arrow" />
             </a>
+            <a className="contact-link" href={CONTACT_GITHUB} target="_blank" rel="noopener noreferrer">
+              <span className="contact-link-icon"><GitHubIcon size={20} /></span>
+              <span><span className="contact-link-label">{s.githubLabel}</span><span className="contact-link-value">Tem0Key</span></span>
+              <ArrowUpRight size={18} strokeWidth={1.5} className="contact-link-arrow" />
+            </a>
           </div>
           <p className="contact-availability"><span />{t.note}</p>
           <ArrowDownRight className="contact-decoration" size={88} strokeWidth={0.7} aria-hidden="true" />
@@ -241,24 +275,43 @@ export function ContactSection({ lang }: { lang: Language }) {
           </div>
           <p className="contact-required-note">{t.requiredNote}</p>
 
-          {feedback === "draft" && draft && <div className="contact-feedback is-success contact-draft" role="status">
-            <div><strong>{s.title}</strong>
-              <p>{s.instructions}</p>
-              <a href={draft.href}>{s.open}<ArrowUpRight size={14} aria-hidden="true"/></a>
-              <label htmlFor="contact-draft">{s.text}</label>
-              <textarea id="contact-draft" readOnly value={`${draft.subject}\n\n${draft.body}`} rows={6} onFocus={event => event.currentTarget.select()}/>
-            </div>
-          </div>}
-          {feedback && feedback !== "draft" && <div className={`contact-feedback${feedback === "success" ? " is-success" : " is-error"}`} role={feedback === "success" ? "status" : "alert"}>
+          {feedback && <div className={`contact-feedback${feedback === "success" ? " is-success" : " is-error"}`} role={feedback === "success" ? "status" : "alert"}>
             {feedback === "success" ? <><Check size={19} aria-hidden="true" /><div><strong>{t.successTitle}</strong><p>{t.success}</p></div></> : <div><strong>{feedback === "validation" ? t.validation : t.errorTitle}</strong>{feedback !== "validation" && <><p>{feedback === "not_configured" ? t.unavailable : feedback === "rate_limited" ? t.rateLimited : t.failed}</p><a href={`mailto:${CONTACT_EMAIL}`}>{t.direct}<ArrowUpRight size={14} aria-hidden="true" /></a></>}</div>}
           </div>}
 
           <button className="contact-submit" type="submit" disabled={pending}>
-            <span>{pending ? t.sending : STATIC_SITE ? (s.prepare) : t.send}</span>{pending ? <LoaderCircle size={17} className="contact-spinner" aria-hidden="true" /> : <Send size={17} strokeWidth={1.7} aria-hidden="true" />}
+            <span>{pending ? t.sending : t.send}</span>{pending ? <LoaderCircle size={17} className="contact-spinner" aria-hidden="true" /> : <Send size={17} strokeWidth={1.7} aria-hidden="true" />}
           </button>
           <p className="contact-privacy">{STATIC_SITE ? (s.privacy) : t.privacy}</p>
         </form>
       </div>
+      <dialog className="contact-draft-dialog" ref={dialogRef} aria-labelledby="contact-draft-title" aria-describedby="contact-draft-description" onClose={() => setDraftValues(null)}>
+        {draft && <>
+          <div className="contact-draft-heading">
+            <span className="contact-draft-info"><Info size={22} aria-hidden="true" /></span>
+            <button type="button" className="contact-draft-close" onClick={() => dialogRef.current?.close()} aria-label={s.close} autoFocus><X size={20} aria-hidden="true" /></button>
+          </div>
+          <h3 id="contact-draft-title">{s.title}</h3>
+          <p id="contact-draft-description">{s.instructions}</p>
+          <div className="contact-draft-fields">
+            {([
+              { id: "recipient", label: s.recipient, value: CONTACT_EMAIL },
+              { id: "subject", label: s.subject, value: draft.subject },
+              { id: "body", label: s.text, value: draft.body },
+            ]).map(({ id, label, value }) => <div className="contact-draft-field" key={id}>
+              <div className="contact-draft-field-heading">
+                <label htmlFor={`contact-draft-${id}`}>{label}</label>
+                <button type="button" onClick={() => copyDraftField(id, value)} aria-label={`${s.copy}: ${label}`}>
+                  {copied === id ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}{copied === id ? s.copied : s.copy}
+                </button>
+              </div>
+              {id === "body" ? <textarea id={`contact-draft-${id}`} readOnly value={value} rows={9} onFocus={event => event.currentTarget.select()} /> : <input id={`contact-draft-${id}`} readOnly value={value} onFocus={event => event.currentTarget.select()} />}
+            </div>)}
+          </div>
+          <p className="contact-draft-copy-status" role="status">{copyFailed ? s.copyFailed : copied ? s.copied : ""}</p>
+          <a className="contact-draft-open" href={draft.href}>{s.open}<ArrowUpRight size={16} aria-hidden="true" /></a>
+        </>}
+      </dialog>
     </section>
   );
 }

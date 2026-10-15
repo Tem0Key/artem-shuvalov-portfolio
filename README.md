@@ -15,7 +15,7 @@ npm run build:pages
 
 This build sets the repository base path, static export mode, and public site URL. All UI routes are TSX; the Pages build discovers TSX routes only, excluding the server-only `app/api/contact/route.ts`. The API remains available in normal server deployments. If adding new UI routes, use `.tsx` so they are included in the static build.
 
-On GitHub Pages, the contact form validates the details and prepares a `mailto:` draft. Visitors review and send it from their own email app, or copy the provided text into webmail. It does not claim to send messages automatically. No Resend key is needed for this version.
+On GitHub Pages, the contact form validates the details and opens a dialog explaining that hosting has no backend and the message has not been sent. The recipient, subject, and body each have a copy button, with an optional `mailto:` link to open an email app. The body starts with the visitor’s message, followed by a localized closing and all supplied sender/recruitment details. Closing the dialog preserves the form. The contact links include email, LinkedIn, and GitHub. All of this is available in EN/RU/ES. No Resend key is needed for this version.
 
 ## Local development
 
@@ -63,7 +63,7 @@ npm run build:next
 npm run build
 ```
 
-Fifteen isolated tests cover mail-draft encoding, validation, origin checks, request limits, honeypot, rate limits, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. Desktop and mobile layouts, both languages, project expansion, mobile menu keyboard handling, image loading, and contact feedback were checked in a browser.
+Sixteen isolated tests cover mail-draft encoding, localized signature/detail ordering, validation, origin checks, request limits, honeypot, rate limits, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. Desktop and mobile layouts, all three languages, project expansion, mobile menu keyboard handling, image loading, and contact feedback were checked in a browser.
 
 ## Content and assets
 

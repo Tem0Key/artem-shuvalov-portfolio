@@ -26,7 +26,31 @@ export const contactEs = {
 };
 
 export const staticContactCopy = {
-  en: { tag: "NEW CONNECTION", intro: "Fill in the details, then open the prepared draft in your email app and send it.", title: "Your draft is ready. It hasn’t been sent yet.", instructions: "Open your email app, review the draft, and press Send. If no email app is configured, copy the text below and email me directly.", open: "Open draft in email app", text: "Email text to copy", prepare: "Prepare email draft", privacy: "You send the message from your own email app." },
-  ru: { tag: "НОВОЕ ЗНАКОМСТВО", intro: "Заполните форму, затем откройте подготовленное письмо в своей почте и отправьте его.", title: "Письмо подготовлено. Оно ещё не отправлено.", instructions: "Откройте почту, проверьте текст и нажмите «Отправить». Если почтовое приложение не настроено, скопируйте текст ниже и напишите мне напрямую.", open: "Открыть письмо в почте", text: "Текст письма для копирования", prepare: "Подготовить письмо", privacy: "Письмо отправляется вами из вашего почтового приложения." },
-  es: { tag: "NUEVA CONEXIÓN", intro: "Completa los datos, abre el borrador en tu aplicación de correo y envíalo desde allí.", title: "Tu borrador está listo. Todavía no se ha enviado.", instructions: "Abre tu aplicación de correo, revisa el borrador y pulsa Enviar. Si no tienes una aplicación configurada, copia el texto y escríbeme directamente.", open: "Abrir borrador en el correo", text: "Texto del correo para copiar", prepare: "Preparar borrador", privacy: "Envías el mensaje desde tu propia aplicación de correo." },
+  en: {
+    tag: "NEW CONNECTION", githubLabel: "FIND ME ON GITHUB",
+    intro: "Fill in the form to prepare an email you can copy and send from your own mailbox.",
+    title: "Automatic sending is not available yet",
+    instructions: "This website is hosted without a backend, so it cannot send emails automatically. Your message has not been sent. Copy the details below into your email service and send it to me.",
+    open: "Open in email app", recipient: "To", subject: "Subject", text: "Message",
+    copy: "Copy", copied: "Copied", copyFailed: "Couldn’t copy automatically. Select and copy the field manually.", close: "Close",
+    privacy: "Your details stay in this browser until you send the email yourself.",
+  },
+  ru: {
+    tag: "НОВОЕ ЗНАКОМСТВО", githubLabel: "МОЙ ПРОФИЛЬ GITHUB",
+    intro: "Заполните форму, чтобы подготовить письмо для копирования и отправки из вашей почты.",
+    title: "Автоматическая отправка пока недоступна",
+    instructions: "Сайт размещён без бэкенда, поэтому автоматически отправить письмо пока невозможно. Ваше сообщение не отправлено. Скопируйте данные ниже в свою почту и отправьте письмо мне.",
+    open: "Открыть в почтовом приложении", recipient: "Кому", subject: "Тема", text: "Текст письма",
+    copy: "Копировать", copied: "Скопировано", copyFailed: "Не удалось скопировать автоматически. Выделите и скопируйте поле вручную.", close: "Закрыть",
+    privacy: "Ваши данные остаются в этом браузере, пока вы сами не отправите письмо.",
+  },
+  es: {
+    tag: "NUEVA CONEXIÓN", githubLabel: "MI PERFIL DE GITHUB",
+    intro: "Completa el formulario para preparar un correo que puedas copiar y enviar desde tu propia cuenta.",
+    title: "El envío automático aún no está disponible",
+    instructions: "Este sitio está alojado sin backend, por lo que todavía no puede enviar correos automáticamente. Tu mensaje no se ha enviado. Copia los datos de abajo en tu servicio de correo y envíame el mensaje.",
+    open: "Abrir en la aplicación de correo", recipient: "Para", subject: "Asunto", text: "Mensaje",
+    copy: "Copiar", copied: "Copiado", copyFailed: "No se pudo copiar automáticamente. Selecciona y copia el campo manualmente.", close: "Cerrar",
+    privacy: "Tus datos permanecen en este navegador hasta que envíes el correo por tu cuenta.",
+  },
 };

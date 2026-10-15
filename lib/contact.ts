@@ -1,6 +1,7 @@
 /** Shared form validation and a small, dependency-free contact API. */
 export const CONTACT_EMAIL = "shuvaloff.artyom@gmail.com";
 export const CONTACT_LINKEDIN = "https://linkedin.com/in/artyom-shuvalov-0b9029332";
+export const CONTACT_GITHUB = "https://github.com/Tem0Key";
 export const MAX_CONTACT_BYTES = 16_384;
 
 export const CONTACT_LIMITS = {
@@ -19,15 +20,15 @@ export type ContactValues = Record<ContactField, string>;
 /** A draft only: the visitor reviews and sends it in their own email client. */
 export function buildContactDraft(values: ContactValues, lang: "en" | "ru" | "es" = "en") {
   const labels = {
-    ru: { name: "Имя", email: "Почта", company: "Компания", role: "Вакансия", jobLink: "Ссылка", subject: "Предложение о работе" },
-    en: { name: "Name", email: "Email", company: "Company", role: "Role", jobLink: "Job link", subject: "Career opportunity" },
-    es: { name: "Nombre", email: "Correo", company: "Empresa", role: "Puesto", jobLink: "Enlace a la oferta", subject: "Oportunidad profesional" },
+    ru: { name: "Имя", email: "Почта", company: "Компания", role: "Вакансия", jobLink: "Ссылка", subject: "Предложение о работе", regards: "С уважением," },
+    en: { name: "Name", email: "Email", company: "Company", role: "Role", jobLink: "Job link", subject: "Career opportunity", regards: "Best regards," },
+    es: { name: "Nombre", email: "Correo", company: "Empresa", role: "Puesto", jobLink: "Enlace a la oferta", subject: "Oportunidad profesional", regards: "Saludos cordiales," },
   }[lang];
   const subject = values.role ? `${labels.subject}: ${values.role}` : labels.subject;
   const details = (["name", "email", "company", "role", "jobLink"] as const)
     .filter(field => values[field])
     .map(field => `${labels[field]}: ${values[field]}`);
-  const body = [...details, "", values.message].join("\r\n");
+  const body = [values.message.replace(/\r\n?/g, "\n").replace(/\n/g, "\r\n"), "", labels.regards, ...details].join("\r\n");
   return { subject, body, href: `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}` };
 }
 export type ContactFieldError = "required" | "invalid" | "too_long";

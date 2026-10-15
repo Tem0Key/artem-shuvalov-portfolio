@@ -31,12 +31,30 @@ test("static email drafts preserve details and safely encode mail headers and bo
   assert.equal(url.pathname, CONTACT_EMAIL);
   assert.equal(url.searchParams.get("subject"), "Career opportunity: Network & Security");
   assert.equal(url.searchParams.get("body"), draft.body);
-  assert.ok(draft.body.includes(values.message));
+  assert.ok(draft.body.startsWith("Hello & thanks!\r\nПривет\r\n\r\nBest regards,"));
   assert.ok(draft.body.includes(`Job link: ${validInput.jobLink}`));
   assert.ok(buildContactDraft(values, "ru").subject.startsWith("Предложение о работе:"));
   const spanish = buildContactDraft(values, "es");
   assert.equal(new URL(spanish.href).searchParams.get("subject"), "Oportunidad profesional: Network & Security");
   assert.ok(spanish.body.includes("Nombre: Alex Morgan"));
+});
+
+test("drafts put all sender details after the localized closing and omit empty optional fields", () => {
+  for (const [lang, closing, nameLabel, emailLabel, companyLabel, roleLabel, linkLabel] of [
+    ["en", "Best regards,", "Name", "Email", "Company", "Role", "Job link"],
+    ["ru", "С уважением,", "Имя", "Почта", "Компания", "Вакансия", "Ссылка"],
+    ["es", "Saludos cordiales,", "Nombre", "Correo", "Empresa", "Puesto", "Enlace a la oferta"],
+  ]) {
+    const draft = buildContactDraft(validInput, lang);
+    assert.equal(draft.body, [validInput.message, "", closing,
+      `${nameLabel}: ${validInput.name}`, `${emailLabel}: ${validInput.email}`,
+      `${companyLabel}: ${validInput.company}`, `${roleLabel}: ${validInput.role}`,
+      `${linkLabel}: ${validInput.jobLink}`].join("\r\n"));
+    const minimal = buildContactDraft({ ...validInput, company: "", role: "", jobLink: "" }, lang);
+    assert.ok(!minimal.body.includes(`${companyLabel}:`));
+    assert.ok(!minimal.body.includes(`${roleLabel}:`));
+    assert.ok(!minimal.body.includes(`${linkLabel}:`));
+  }
 });
 
 function request(input = validInput, headers = {}) {

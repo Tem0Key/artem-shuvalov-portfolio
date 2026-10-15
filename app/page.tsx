@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, MotionConfig, useReducedMotion } from "motion/react";
 import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, Code2, Menu, Network, X } from "lucide-react";
-import { LinkedInIcon as Linkedin } from "@/components/social-icons";
+import { GitHubIcon, LinkedInIcon as Linkedin } from "@/components/social-icons";
 import { NetworkVisual } from "@/components/network-visual";
 import { PortfolioSections } from "@/components/portfolio-sections";
 import { ContactSection } from "@/components/contact-section";
@@ -59,7 +59,10 @@ export default function Home() {
         </nav>
         <div className="nav-actions">
           <div className="language-switch" aria-label={ru ? "Язык" : "Language"}><button lang="en" aria-pressed={lang === "en"} onClick={() => setLang("en")}>EN</button><span>/</span><button lang="ru" aria-pressed={lang === "ru"} onClick={() => setLang("ru")}>RU</button></div>
-          <a className="nav-social" href={linkedIn} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={16}/></a>
+          <div className="nav-social-links">
+            <a className="nav-social" href={linkedIn} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><Linkedin size={16}/></a>
+            <a className="nav-social" href="https://github.com/Tem0Key" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub · Tem0Key"><GitHubIcon size={17}/></a>
+          </div>
           <a href="#contact" className="nav-connect">{ru ? "На связи" : "Let’s connect"}<ArrowUpRight size={15}/></a>
           <button ref={menuButton} className="menu-toggle" aria-label={menuOpen ? (ru ? "Закрыть меню" : "Close menu") : (ru ? "Открыть меню" : "Open menu")} aria-expanded={menuOpen} aria-controls="mobile-nav" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
         </div>

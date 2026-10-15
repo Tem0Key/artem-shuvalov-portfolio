@@ -6,6 +6,7 @@ import {
   createContactRateLimiter,
   handleContactRequest,
   validateContactInput,
+  buildContactDraft,
 } from "../lib/contact.ts";
 
 const validInput = {
@@ -21,6 +22,19 @@ const configured = {
   RESEND_API_KEY: "test-only-key",
   CONTACT_FROM_EMAIL: "Portfolio <hello@example.com>",
 };
+
+test("static email drafts preserve details and safely encode mail headers and body", () => {
+  const values = { ...validInput, role: "Network & Security", message: "Hello & thanks!\nПривет" };
+  const draft = buildContactDraft(values);
+  const url = new URL(draft.href);
+  assert.equal(url.protocol, "mailto:");
+  assert.equal(url.pathname, CONTACT_EMAIL);
+  assert.equal(url.searchParams.get("subject"), "Career opportunity: Network & Security");
+  assert.equal(url.searchParams.get("body"), draft.body);
+  assert.ok(draft.body.includes(values.message));
+  assert.ok(draft.body.includes(`Job link: ${validInput.jobLink}`));
+  assert.ok(buildContactDraft(values, "ru").subject.startsWith("Предложение о работе:"));
+});
 
 function request(input = validInput, headers = {}) {
   return new Request("https://portfolio.example/api/contact", {

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.13.0" },
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3000",
     "build": "node scripts/run-framework.mjs build",
@@ -12,7 +14,8 @@
     "dev:site": "node scripts/run-framework.mjs dev",
     "preview:site": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "build:pages": "node scripts/build-pages.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -41,5 +44,9 @@
     "vite": "8.0.13",
     "wrangler": "4.92.0"
   },
-  "overrides": { "miniflare": { "sharp": "0.35.4" } }
+  "overrides": {
+    "miniflare": {
+      "sharp": "0.35.4"
+    }
+  }
 }

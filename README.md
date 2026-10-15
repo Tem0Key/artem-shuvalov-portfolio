@@ -2,6 +2,21 @@
 
 A responsive English/Russian portfolio built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, Motion, and Lucide. Original SVG network artwork is animated with CSS; photos and the Inter variable font are served locally.
 
+Live portfolio: **https://tem0key.github.io/artem-shuvalov-portfolio/**
+
+## GitHub Pages
+
+Pushes to `main` run `.github/workflows/pages.yml`, build the static site, and deploy `out/` to GitHub Pages. In repository settings, Pages uses **GitHub Actions** with no custom domain. It publishes the portfolio, rather than rendering this README from the repository root.
+
+```sh
+npm ci
+npm run build:pages
+```
+
+This build sets the repository base path, static export mode, and public site URL. All UI routes are TSX; the Pages build discovers TSX routes only, excluding the server-only `app/api/contact/route.ts`. The API remains available in normal server deployments. If adding new UI routes, use `.tsx` so they are included in the static build.
+
+On GitHub Pages, the contact form validates the details and prepares a `mailto:` draft. Visitors review and send it from their own email app, or copy the provided text into webmail. It does not claim to send messages automatically. No Resend key is needed for this version.
+
 ## Local development
 
 Requires Node.js 22.13 or later.
@@ -46,7 +61,7 @@ npm run build:next
 npm run build
 ```
 
-Fourteen isolated API tests cover validation, origin checks, request limits, honeypot, rate limits, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. Desktop and mobile layouts, both languages, project expansion, mobile menu keyboard handling, image loading, and contact error feedback were checked in a browser against the built hosting runtime.
+Fifteen isolated tests cover mail-draft encoding, validation, origin checks, request limits, honeypot, rate limits, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. Desktop and mobile layouts, both languages, project expansion, mobile menu keyboard handling, image loading, and contact feedback were checked in a browser.
 
 ## Content and assets
 
@@ -55,7 +70,7 @@ Fourteen isolated API tests cover validation, origin checks, request limits, hon
 - `components/portfolio-sections.tsx`: factual experience, project previews, skills, education, certificates.
 - `components/contact-section.tsx`: accessible recruitment form.
 - `lib/contact.ts` and `app/api/contact/route.ts`: validation and email delivery.
-- `public/assets/`: supplied portraits, original CV, local font and its license.
+- `public/assets/`: supplied portraits, original CV, and font license; `app/fonts/` contains the bundled local font.
 
 Professional facts come from the supplied CV and brief. Project interface previews are explicitly illustrative. The proposed expansion to approximately 40 additional users is labeled as planned and incomplete. The CV is offered unchanged; it retains any original document annotations. No SceneAI video or design assets are used.
 

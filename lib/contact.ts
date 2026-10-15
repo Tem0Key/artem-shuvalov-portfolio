@@ -15,6 +15,19 @@ export const CONTACT_LIMITS = {
 
 export type ContactField = keyof typeof CONTACT_LIMITS;
 export type ContactValues = Record<ContactField, string>;
+
+/** A draft only: the visitor reviews and sends it in their own email client. */
+export function buildContactDraft(values: ContactValues, lang: "en" | "ru" = "en") {
+  const labels = lang === "ru"
+    ? { name: "Имя", email: "Почта", company: "Компания", role: "Вакансия", jobLink: "Ссылка", subject: "Предложение о работе" }
+    : { name: "Name", email: "Email", company: "Company", role: "Role", jobLink: "Job link", subject: "Career opportunity" };
+  const subject = values.role ? `${labels.subject}: ${values.role}` : labels.subject;
+  const details = (["name", "email", "company", "role", "jobLink"] as const)
+    .filter(field => values[field])
+    .map(field => `${labels[field]}: ${values[field]}`);
+  const body = [...details, "", values.message].join("\r\n");
+  return { subject, body, href: `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}` };
+}
 export type ContactFieldError = "required" | "invalid" | "too_long";
 export type ContactErrors = Partial<Record<ContactField, ContactFieldError>>;
 export type ContactEnvironment = {

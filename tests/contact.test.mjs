@@ -34,6 +34,9 @@ test("static email drafts preserve details and safely encode mail headers and bo
   assert.ok(draft.body.includes(values.message));
   assert.ok(draft.body.includes(`Job link: ${validInput.jobLink}`));
   assert.ok(buildContactDraft(values, "ru").subject.startsWith("Предложение о работе:"));
+  const spanish = buildContactDraft(values, "es");
+  assert.equal(new URL(spanish.href).searchParams.get("subject"), "Oportunidad profesional: Network & Security");
+  assert.ok(spanish.body.includes("Nombre: Alex Morgan"));
 });
 
 function request(input = validInput, headers = {}) {

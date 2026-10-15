@@ -34,6 +34,8 @@
 .nav-social-links .nav-social{display:flex;align-items:center;justify-content:center;min-width:24px;min-height:32px}
 @media(max-width:767px){.nav-actions{gap:9px}.nav-social-links{gap:5px}}
 @media(max-width:380px){.brand small{display:none}}
+.language-option{display:inline-flex;align-items:center;gap:6px}.language-option>span{color:#444a50}
+@media(max-width:767px){.nav-actions{gap:7px}.language-switch{gap:4px}.language-option{gap:4px}.language-switch button{font-size:8px}.nav-social-links{gap:3px}.nav-social-links .nav-social{min-width:22px}html[lang=es] .hero h1{font-size:clamp(37px,7.5vw,56px);letter-spacing:-2px}}
 @media(min-width:1025px){.mobile-nav{display:none}}
 @media(max-width:767px){html[lang=ru] .hero h1{font-size:clamp(34px,7.7vw,56px);letter-spacing:-2px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}

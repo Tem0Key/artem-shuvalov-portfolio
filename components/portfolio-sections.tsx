@@ -1,11 +1,13 @@
 "use client";
 
-import { Activity, ArrowDownRight, ArrowUpRight, Braces, Check, ChevronDown, Code2, FileCode2, GraduationCap, Layers3, Network, Radar, Route, Terminal, Workflow } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, Braces, Check, ChevronDown, FileCode2, GraduationCap, Network, Radar, Route, Terminal, Workflow } from "lucide-react";
 import "./portfolio-sections.css";
-
-type Language = "en" | "ru";
+import { portfolioEs } from "@/lib/portfolio-es";
+import { assetPath } from "@/lib/site-config";
+import type { Language } from "@/lib/i18n";
 
 const copy = {
+  es: portfolioEs,
   en: {
     experienceEyebrow: "02 / Experience",
     experienceTitle: "Experience built on real infrastructure.",
@@ -179,14 +181,14 @@ export function PortfolioSections({ lang }: { lang: Language }) {
   const t = copy[lang];
   return (
     <div className="container ps-sections">
-      <section className="section-shell ps-experience" id="experience" aria-label={lang === "en" ? "Professional experience" : "Опыт работы"}>
+      <section className="section-shell ps-experience" id="experience" aria-label={t.experienceTitle}>
         <Heading eyebrow={t.experienceEyebrow} title={t.experienceTitle} description={t.experienceIntro} />
         <div className="ps-timeline">
           <article className="ps-timeline-item ps-timeline-item-featured">
             <div className="ps-timeline-period"><span className="ps-node" /><span>{t.sberDate}</span><span className="ps-period-index">01 / 02</span></div>
             <details className="ps-job" open>
               <summary>
-                <div className="ps-job-brand"><span className="ps-company-mark ps-sber-mark"><Layers3 size={23} aria-hidden="true" /></span><span className="ps-company-name">Sberbank</span><ArrowUpRight className="ps-job-corner" size={20} aria-hidden="true" /></div>
+                <div className="ps-job-brand"><a className="ps-company-link" href="https://www.sberbank.ru/en/individualclients/bankdetails" target="_blank" rel="noopener noreferrer" onClick={event => event.stopPropagation()}><span className="ps-company-mark ps-sber-mark"><img src={assetPath("/assets/logos/sber.png")} alt="" width="32" height="32" loading="lazy"/></span><span className="ps-company-name">{lang === "ru" ? "Сбер" : "Sberbank"}</span><ArrowUpRight size={16} aria-hidden="true"/></a></div>
                 <h3>{t.sberRole}</h3>
                 <p className="ps-job-summary">{t.sberSummary}</p>
                 <span className="ps-expand-label">{t.details}<ChevronDown size={15} aria-hidden="true" /></span>
@@ -201,7 +203,7 @@ export function PortfolioSections({ lang }: { lang: Language }) {
             <div className="ps-timeline-period"><span className="ps-node" /><span>{t.stcDate}</span><span className="ps-period-index">02 / 02</span></div>
             <details className="ps-job">
               <summary>
-                <div className="ps-job-brand"><span className="ps-company-mark"><Code2 size={23} aria-hidden="true" /></span><span className="ps-company-name">STC</span><ArrowUpRight className="ps-job-corner" size={20} aria-hidden="true" /></div>
+                <div className="ps-job-brand"><a className="ps-company-link" href="https://www.stc-spb.ru/company/" target="_blank" rel="noopener noreferrer" onClick={event => event.stopPropagation()}><span className="ps-company-mark"><img src={assetPath("/assets/logos/stc.png")} alt="" width="32" height="32" loading="lazy"/></span><span className="ps-company-name">{lang === "ru" ? "СТЦ" : "STC"}</span><ArrowUpRight size={16} aria-hidden="true"/></a></div>
                 <h3>{t.stcRole}</h3>
                 <p className="ps-job-summary">{t.stcSummary}</p>
                 <span className="ps-expand-label">{t.details}<ChevronDown size={15} aria-hidden="true" /></span>
@@ -215,7 +217,7 @@ export function PortfolioSections({ lang }: { lang: Language }) {
         </div>
       </section>
 
-      <section className="section-shell ps-projects" id="projects" aria-label={lang === "en" ? "Selected projects" : "Избранные проекты"}>
+      <section className="section-shell ps-projects" id="projects" aria-label={t.projectsTitle}>
         <Heading eyebrow={t.projectsEyebrow} title={t.projectsTitle} description={t.projectsIntro} />
         <div className="ps-project-grid">
           <article className="ps-project-card ps-project-audit">
@@ -253,12 +255,12 @@ export function PortfolioSections({ lang }: { lang: Language }) {
         </div>
       </section>
 
-      <section className="section-shell ps-skills" id="skills" aria-label={lang === "en" ? "Technical skills" : "Технические навыки"}>
+      <section className="section-shell ps-skills" id="skills" aria-label={t.skillsTitle}>
         <Heading eyebrow={t.skillsEyebrow} title={t.skillsTitle} description={t.skillsIntro} />
         <div className="ps-skills-grid">{t.skillGroups.map((group, i) => { const Icon = skillIcons[i]; return <article className="ps-skill-card" key={group.title}><div className="ps-skill-top"><span className="ps-skill-icon"><Icon size={23} strokeWidth={1.5} aria-hidden="true" /></span><span className="ps-skill-index">0{i + 1}</span></div><h3>{group.title}</h3><p>{group.description}</p><ul>{group.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul></article>; })}</div>
       </section>
 
-      <section className="section-shell ps-education" id="education" aria-label={lang === "en" ? "Education and certifications" : "Образование и сертификаты"}>
+      <section className="section-shell ps-education" id="education" aria-label={t.educationTitle}>
         <Heading eyebrow={t.educationEyebrow} title={t.educationTitle} />
         <div className="ps-education-grid">
           <div className="ps-degree-column"><h3 className="ps-list-heading"><GraduationCap size={17} aria-hidden="true" />{t.educationLabel}</h3><article className="ps-degree"><div className="ps-degree-meta"><span>01</span><span>{t.mastersDate}</span></div><h4>{t.itmo}</h4><p className="ps-degree-name">{t.masters}</p><p className="ps-thesis">{t.mastersThesis}</p></article><article className="ps-degree"><div className="ps-degree-meta"><span>02</span><span>{t.bachelorsDate}</span></div><h4>{t.gut}</h4><p className="ps-degree-name">{t.bachelors}</p><p className="ps-thesis">{t.bachelorsThesis}</p></article></div>

@@ -4,6 +4,8 @@ import { useRef, useState, type FormEvent } from "react";
 import { ArrowDownRight, ArrowUpRight, Check, LoaderCircle, Mail, Send } from "lucide-react";
 import { LinkedInIcon as Linkedin } from "@/components/social-icons";
 import { STATIC_SITE } from "@/lib/site-config";
+import { contactEs, staticContactCopy } from "@/lib/contact-es";
+import type { Language } from "@/lib/i18n";
 import {
   CONTACT_EMAIL,
   CONTACT_LIMITS,
@@ -18,6 +20,7 @@ import "./contact-section.css";
 
 const emptyValues: ContactValues = { name: "", email: "", company: "", role: "", jobLink: "", message: "", website: "" };
 const copy = {
+  es: { ...contactEs, title: <>Construyamos<br />algo <em>seguro.</em></> },
   en: {
     eyebrow: "06 / LET’S CONNECT",
     title: <>Let’s build<br />something <em>secure.</em></>,
@@ -78,8 +81,9 @@ type Feedback = "success" | "draft" | "not_configured" | "rate_limited" | "valid
 type VisibleField = Exclude<ContactField, "website">;
 const visibleFields: VisibleField[] = ["name", "email", "company", "role", "jobLink", "message"];
 
-export function ContactSection({ lang }: { lang: "en" | "ru" }) {
+export function ContactSection({ lang }: { lang: Language }) {
   const t = copy[lang];
+  const s = staticContactCopy[lang];
   const [values, setValues] = useState<ContactValues>(emptyValues);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [pending, setPending] = useState(false);
@@ -198,9 +202,9 @@ export function ContactSection({ lang }: { lang: "en" | "ru" }) {
         </div>
 
         <form className="contact-form" ref={formRef} onSubmit={submit} noValidate aria-busy={pending}>
-          <div className="contact-form-header"><span className="contact-form-tag">{lang === "en" ? "NEW CONNECTION" : "НОВОЕ ЗНАКОМСТВО"}</span><span className="contact-form-dots" aria-hidden="true"><i /><i /><i /></span></div>
+          <div className="contact-form-header"><span className="contact-form-tag">{s.tag}</span><span className="contact-form-dots" aria-hidden="true"><i /><i /><i /></span></div>
           <h3>{t.formTitle}</h3>
-          <p className="contact-form-intro">{STATIC_SITE ? (lang === "ru" ? "Заполните форму, затем откройте подготовленное письмо в своей почте и отправьте его." : "Fill in the details, then open the prepared draft in your email app and send it.") : t.formIntro}</p>
+          <p className="contact-form-intro">{STATIC_SITE ? (s.intro) : t.formIntro}</p>
           <div className="contact-fields">
             {visibleFields.map((field) => {
               const required = field === "name" || field === "email" || field === "message";
@@ -238,10 +242,10 @@ export function ContactSection({ lang }: { lang: "en" | "ru" }) {
           <p className="contact-required-note">{t.requiredNote}</p>
 
           {feedback === "draft" && draft && <div className="contact-feedback is-success contact-draft" role="status">
-            <div><strong>{lang === "ru" ? "Письмо подготовлено. Оно ещё не отправлено." : "Your draft is ready. It hasn’t been sent yet."}</strong>
-              <p>{lang === "ru" ? "Откройте почту, проверьте текст и нажмите «Отправить». Если почтовое приложение не настроено, скопируйте текст ниже и напишите мне напрямую." : "Open your email app, review the draft, and press Send. If no email app is configured, copy the text below and email me directly."}</p>
-              <a href={draft.href}>{lang === "ru" ? "Открыть письмо в почте" : "Open draft in email app"}<ArrowUpRight size={14} aria-hidden="true"/></a>
-              <label htmlFor="contact-draft">{lang === "ru" ? "Текст письма для копирования" : "Email text to copy"}</label>
+            <div><strong>{s.title}</strong>
+              <p>{s.instructions}</p>
+              <a href={draft.href}>{s.open}<ArrowUpRight size={14} aria-hidden="true"/></a>
+              <label htmlFor="contact-draft">{s.text}</label>
               <textarea id="contact-draft" readOnly value={`${draft.subject}\n\n${draft.body}`} rows={6} onFocus={event => event.currentTarget.select()}/>
             </div>
           </div>}
@@ -250,9 +254,9 @@ export function ContactSection({ lang }: { lang: "en" | "ru" }) {
           </div>}
 
           <button className="contact-submit" type="submit" disabled={pending}>
-            <span>{pending ? t.sending : STATIC_SITE ? (lang === "ru" ? "Подготовить письмо" : "Prepare email draft") : t.send}</span>{pending ? <LoaderCircle size={17} className="contact-spinner" aria-hidden="true" /> : <Send size={17} strokeWidth={1.7} aria-hidden="true" />}
+            <span>{pending ? t.sending : STATIC_SITE ? (s.prepare) : t.send}</span>{pending ? <LoaderCircle size={17} className="contact-spinner" aria-hidden="true" /> : <Send size={17} strokeWidth={1.7} aria-hidden="true" />}
           </button>
-          <p className="contact-privacy">{STATIC_SITE ? (lang === "ru" ? "Письмо отправляется вами из вашего почтового приложения." : "You send the message from your own email app.") : t.privacy}</p>
+          <p className="contact-privacy">{STATIC_SITE ? (s.privacy) : t.privacy}</p>
         </form>
       </div>
     </section>

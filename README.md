@@ -1,6 +1,6 @@
 # Artem Shuvalov — personal portfolio
 
-A responsive English/Russian portfolio built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, Motion, and Lucide. Original SVG network artwork is animated with CSS; photos and the Inter variable font are served locally.
+A responsive English/Russian/Spanish portfolio built with Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, Motion, and Lucide. Original SVG network artwork is animated with CSS; photos and the Inter variable font are served locally.
 
 Live portfolio: **https://tem0key.github.io/artem-shuvalov-portfolio/**
 
@@ -27,6 +27,8 @@ npm run dev
 ```
 
 Open http://127.0.0.1:3000. Language selection is remembered locally. Navigation, native expandable experience/project details, reduced-motion preferences, CV download, and the recruitment form work without third-party frontend services.
+
+The About gallery starts with the supplied `IMG_1.jpeg` portrait, optimized as `public/assets/photos/img_1.webp`. It includes all eight new photos and the two previous portraits, with separate lightweight thumbnails. Company logos have transparent backgrounds, and the Sberbank/STC names link to the supplied official company pages. EN/RU/ES covers all narrative sections, gallery controls, navigation, form feedback, and email drafts.
 
 ## Standard Next.js production deployment
 

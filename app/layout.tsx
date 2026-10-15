@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    images: [{ url: new URL(assetPath("/assets/artem-portrait.webp"), new URL(SITE_URL).origin).href, width: 791, height: 996, alt: "Artem Shuvalov" }],
+    images: [{ url: new URL(assetPath("/assets/photos/img_1.webp"), new URL(SITE_URL).origin).href, width: 903, height: 1280, alt: "Artem Shuvalov" }],
   },
   twitter: { card: "summary", title: "Artem Shuvalov | Network Security Engineer" },
   robots: { index: true, follow: true },

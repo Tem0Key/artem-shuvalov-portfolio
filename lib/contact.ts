@@ -17,10 +17,12 @@ export type ContactField = keyof typeof CONTACT_LIMITS;
 export type ContactValues = Record<ContactField, string>;
 
 /** A draft only: the visitor reviews and sends it in their own email client. */
-export function buildContactDraft(values: ContactValues, lang: "en" | "ru" = "en") {
-  const labels = lang === "ru"
-    ? { name: "Имя", email: "Почта", company: "Компания", role: "Вакансия", jobLink: "Ссылка", subject: "Предложение о работе" }
-    : { name: "Name", email: "Email", company: "Company", role: "Role", jobLink: "Job link", subject: "Career opportunity" };
+export function buildContactDraft(values: ContactValues, lang: "en" | "ru" | "es" = "en") {
+  const labels = {
+    ru: { name: "Имя", email: "Почта", company: "Компания", role: "Вакансия", jobLink: "Ссылка", subject: "Предложение о работе" },
+    en: { name: "Name", email: "Email", company: "Company", role: "Role", jobLink: "Job link", subject: "Career opportunity" },
+    es: { name: "Nombre", email: "Correo", company: "Empresa", role: "Puesto", jobLink: "Enlace a la oferta", subject: "Oportunidad profesional" },
+  }[lang];
   const subject = values.role ? `${labels.subject}: ${values.role}` : labels.subject;
   const details = (["name", "email", "company", "role", "jobLink"] as const)
     .filter(field => values[field])

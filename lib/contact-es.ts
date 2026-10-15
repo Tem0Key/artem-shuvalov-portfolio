@@ -1,0 +1,32 @@
+export const contactEs = {
+  eyebrow: "06 / CONECTEMOS",
+  description: "¿Buscas a alguien que conecte la seguridad de redes, la infraestructura y la automatización? Hablemos del próximo reto de tu equipo.",
+  emailLabel: "ESCRÍBEME DIRECTAMENTE",
+  linkedinLabel: "MI PERFIL DE LINKEDIN",
+  linkedin: "Artem Shuvalov",
+  note: "Abierto a oportunidades en seguridad de redes e infraestructura.",
+  formTitle: "Iniciemos una conversación",
+  formIntro: "¿Tienes una oportunidad en mente? Me encantará conocerla.",
+  requiredNote: "* Campos obligatorios",
+  optional: "opcional",
+  labels: { name: "Tu nombre", email: "Correo electrónico", company: "Empresa", role: "Puesto / oportunidad", jobLink: "Enlace a la oferta", message: "Tu mensaje", website: "Sitio web" },
+  placeholders: { name: "Alex García", email: "alex@empresa.com", company: "Nombre de tu empresa", role: "Por ejemplo, ingeniero de seguridad de redes", jobLink: "https://…", message: "Cuéntame sobre el puesto, tu equipo o el proyecto.", website: "" },
+  send: "Enviar mensaje",
+  sending: "Enviando…",
+  privacy: "Tus datos solo se utilizan para responder a tu consulta.",
+  successTitle: "Mensaje enviado. ¡Gracias!",
+  success: "Responderé al correo electrónico que indicaste.",
+  errorTitle: "Tu mensaje todavía no se ha enviado.",
+  unavailable: "El servicio de contacto no está disponible temporalmente. Puedes escribirme directamente por correo.",
+  rateLimited: "Se han recibido varias solicitudes. Inténtalo más tarde o escríbeme directamente.",
+  failed: "Inténtalo de nuevo o utiliza el enlace de correo. Tu mensaje sigue en el formulario.",
+  validation: "Revisa los campos destacados.",
+  direct: "Escribir a Artem directamente",
+  errors: { required: "Completa este campo.", invalid: "Introduce un valor válido.", too_long: "Acorta el texto de este campo.", email: "Introduce un correo electrónico válido.", jobLink: "Utiliza un enlace completo que empiece por http:// o https://." },
+};
+
+export const staticContactCopy = {
+  en: { tag: "NEW CONNECTION", intro: "Fill in the details, then open the prepared draft in your email app and send it.", title: "Your draft is ready. It hasn’t been sent yet.", instructions: "Open your email app, review the draft, and press Send. If no email app is configured, copy the text below and email me directly.", open: "Open draft in email app", text: "Email text to copy", prepare: "Prepare email draft", privacy: "You send the message from your own email app." },
+  ru: { tag: "НОВОЕ ЗНАКОМСТВО", intro: "Заполните форму, затем откройте подготовленное письмо в своей почте и отправьте его.", title: "Письмо подготовлено. Оно ещё не отправлено.", instructions: "Откройте почту, проверьте текст и нажмите «Отправить». Если почтовое приложение не настроено, скопируйте текст ниже и напишите мне напрямую.", open: "Открыть письмо в почте", text: "Текст письма для копирования", prepare: "Подготовить письмо", privacy: "Письмо отправляется вами из вашего почтового приложения." },
+  es: { tag: "NUEVA CONEXIÓN", intro: "Completa los datos, abre el borrador en tu aplicación de correo y envíalo desde allí.", title: "Tu borrador está listo. Todavía no se ha enviado.", instructions: "Abre tu aplicación de correo, revisa el borrador y pulsa Enviar. Si no tienes una aplicación configurada, copia el texto y escríbeme directamente.", open: "Abrir borrador en el correo", text: "Texto del correo para copiar", prepare: "Preparar borrador", privacy: "Envías el mensaje desde tu propia aplicación de correo." },
+};

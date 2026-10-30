@@ -1,7 +1,8 @@
 export const contactEs = {
+  eyebrow: "06 / CONECTEMOS",
   description: "¿Buscas a alguien que conecte la seguridad de redes, la infraestructura y la automatización? Hablemos del próximo reto de tu equipo.",
-  emailLabel: "Escríbeme directamente",
-  linkedinLabel: "Mi perfil de LinkedIn",
+  emailLabel: "ESCRÍBEME DIRECTAMENTE",
+  linkedinLabel: "MI PERFIL DE LINKEDIN",
   linkedin: "Artem Shuvalov",
   note: "Abierto a oportunidades en seguridad de redes e infraestructura.",
   formTitle: "Iniciemos una conversación",
@@ -26,9 +27,7 @@ export const contactEs = {
 
 export const staticContactCopy = {
   en: {
-    tag: "New connection", githubLabel: "Find me on GitHub",
-    prepare: "Prepare email",
-    noScript: "The form needs JavaScript. You can contact me directly by email.",
+    tag: "NEW CONNECTION", githubLabel: "FIND ME ON GITHUB",
     intro: "Fill in the form to prepare an email you can copy and send from your own mailbox.",
     title: "Automatic sending is not available yet",
     instructions: "This website is hosted without a backend, so it cannot send emails automatically. Your message has not been sent. Copy the details below into your email service and send it to me.",
@@ -37,9 +36,7 @@ export const staticContactCopy = {
     privacy: "Your details stay in this browser until you send the email yourself.",
   },
   ru: {
-    tag: "Новое знакомство", githubLabel: "Мой профиль GitHub",
-    prepare: "Подготовить письмо",
-    noScript: "Для формы нужен JavaScript. Вы можете написать мне напрямую по электронной почте.",
+    tag: "НОВОЕ ЗНАКОМСТВО", githubLabel: "МОЙ ПРОФИЛЬ GITHUB",
     intro: "Заполните форму, чтобы подготовить письмо для копирования и отправки из вашей почты.",
     title: "Автоматическая отправка пока недоступна",
     instructions: "Сайт размещён без бэкенда, поэтому автоматически отправить письмо пока невозможно. Ваше сообщение не отправлено. Скопируйте данные ниже в свою почту и отправьте письмо мне.",
@@ -48,9 +45,7 @@ export const staticContactCopy = {
     privacy: "Ваши данные остаются в этом браузере, пока вы сами не отправите письмо.",
   },
   es: {
-    tag: "Nueva conexión", githubLabel: "Mi perfil de GitHub",
-    prepare: "Preparar correo",
-    noScript: "El formulario necesita JavaScript. Puedes escribirme directamente por correo.",
+    tag: "NUEVA CONEXIÓN", githubLabel: "MI PERFIL DE GITHUB",
     intro: "Completa el formulario para preparar un correo que puedas copiar y enviar desde tu propia cuenta.",
     title: "El envío automático aún no está disponible",
     instructions: "Este sitio está alojado sin backend, por lo que todavía no puede enviar correos automáticamente. Tu mensaje no se ha enviado. Copia los datos de abajo en tu servicio de correo y envíame el mensaje.",

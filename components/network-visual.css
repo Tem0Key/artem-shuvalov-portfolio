@@ -1,15 +1,66 @@
-/* Hallmark · shape: kept · genre: modern-minimal · theme: brand · redesign: restyle
- * paper: #070809 · accent: #f0a15a · display: Inter · body: Inter · hero: kept · nav: floating bar · footer: inline mast · signature: original network SVG
- * axes: dark/Inter/amber-cyan · posture: restrained · job: hire · v2.0.0 */
-/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V3 · weakest: V, the existing section composition is retained for recognisability */
-.network-visual { width: 100%; height: 100%; isolation: isolate; pointer-events: none; }
-.network-visual svg { width: 100%; height: 100%; overflow: visible; }
-.nv-packet { stroke-dasharray: 12 988; stroke-dashoffset: 430; animation: nv-signal 12s var(--ease-in-out) infinite; }
-.nv-core { animation: nv-float 12s var(--ease-in-out) infinite; transform-origin: 405px 325px; }
-.nv-dust { opacity: .5; }
-@keyframes nv-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@keyframes nv-signal { 0%,100% { opacity: .25; } 50% { opacity: .8; } }
-.hero[data-motion-paused=true] .network-visual *, .hero:has(.motion-toggle:hover) .network-visual *, .hero:has(.motion-toggle:focus-visible) .network-visual * { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .network-visual * { animation: none !important; } }
+.network-visual {
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+  pointer-events: none;
+}
 
-.motion-toggle:disabled { opacity: .55; cursor: not-allowed; }
+.network-visual svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.nv-packet {
+  stroke-dasharray: 12 988;
+  animation: nv-fiber-flow 7s linear infinite;
+}
+
+.nv-core {
+  animation: nv-core-float 9s ease-in-out infinite;
+  transform-origin: 405px 325px;
+}
+
+.nv-satellite {
+  animation: nv-node-float 8s ease-in-out infinite;
+}
+
+.nv-satellite-1 { animation-delay: -2s; }
+.nv-satellite-2 { animation-delay: -4.5s; }
+.nv-satellite-3 { animation-delay: -1.3s; }
+.nv-satellite-4 { animation-delay: -5.4s; }
+
+.nv-dust {
+  animation: nv-dust-pulse 7s ease-in-out infinite alternate;
+}
+
+@keyframes nv-fiber-flow {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes nv-core-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -5px; }
+}
+
+@keyframes nv-node-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -3px; }
+}
+
+@keyframes nv-dust-pulse {
+  from { opacity: .35; }
+  to { opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .network-visual * {
+    animation: none !important;
+  }
+
+  .nv-packet {
+    stroke-dashoffset: 430;
+    opacity: .65;
+  }
+}

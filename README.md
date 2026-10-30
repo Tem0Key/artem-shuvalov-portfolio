@@ -52,18 +52,19 @@ Without credentials the endpoint deliberately returns 503. The form keeps the en
 
 For reverse proxies that change the incoming request origin, set `CONTACT_ALLOWED_ORIGINS` to a comma-separated list of exact HTTPS origins. The default requires a matching Origin header. `CONTACT_TRUST_PROXY=cloudflare` or `forwarded` enables client-IP throttling only when your trusted proxy overwrites the corresponding header. The bounded memory limiter is per process; use shared storage or an edge rate-limiting service before scaling a public multi-instance deployment.
 
-The API validates field types/lengths, email addresses, HTTP(S) job links, exact origins, streamed request bytes, and a honeypot. It sends plain-text email with an abort timeout and idempotency key and avoids logging submitted personal information.
+The API validates field types/lengths, email addresses, HTTP(S) job links, exact origins, streamed request bytes, and a honeypot. Body reading has a five-second deadline and stops on a disconnected request; delivery has a separate eight-second timeout. Requests rejected by the client limiter do not consume the global budget. It sends plain-text email with an idempotency key and avoids logging submitted personal information.
 
 ## Verification
 
 ```sh
 npm run typecheck
 npm test
+npm run audit:security
 npm run build:next
 npm run build
 ```
 
-Sixteen isolated tests cover mail-draft encoding, localized signature/detail ordering, validation, origin checks, request limits, honeypot, rate limits, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. Desktop and mobile layouts, all three languages, project expansion, mobile menu keyboard handling, image loading, and contact feedback were checked in a browser.
+Twenty isolated tests cover mail-draft encoding, localized signature/detail ordering, validation, origin checks, byte limits, aborted/stalled bodies, honeypot, client/global rate-limit isolation and recovery, idempotency, provider errors/timeouts, and missing configuration. Provider calls are mocked. CI blocks high/critical production dependency advisories and critical advisories anywhere in the tree; a separate non-blocking step reports development advisories. Advisory details can change independently of the source; consult the latest workflow audit output. Desktop and mobile layouts, all three languages, project expansion, mobile menu keyboard handling, image loading, and contact feedback were checked in a browser.
 
 ## Content and assets
 

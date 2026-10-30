@@ -27,6 +27,12 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Install dependencies
         run: npm ci
+      - name: Check production and critical dependency advisories
+        run: npm run audit:security
+      # Keep development dependency advisories visible without blocking Pages.
+      - name: Report development dependency advisories
+        continue-on-error: true
+        run: npm audit --audit-level=high
       - name: Verify contact behavior
         run: npm test
       - name: Build static portfolio

@@ -142,7 +142,7 @@ function validSender(value: string): boolean {
   return emailPattern.test(mailbox) && mailbox.length <= 254;
 }
 
-async function readLimitedJson(request: Request): Promise<{ value?: unknown; status?: number }> {
+async function readLimitedJson(request: Request, timeoutMs: number): Promise<{ value?: unknown; status?: number }> {
   if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
     return { status: 415 };
   }
@@ -151,15 +151,30 @@ async function readLimitedJson(request: Request): Promise<{ value?: unknown; sta
   if (!request.body) return { status: 400 };
 
   const reader = request.body.getReader();
+  let interruptedStatus: number | undefined;
+  let rejectRead: (reason: Error) => void;
+  const interrupted = new Promise<never>((_resolve, reject) => { rejectRead = reject; });
+  const interrupt = (status: number) => {
+    if (interruptedStatus) return;
+    interruptedStatus = status;
+    rejectRead(new Error("Contact request body interrupted"));
+    // A stalled stream's cancel hook must not delay the response either.
+    void reader.cancel().catch(() => {});
+  };
+  const onAbort = () => interrupt(400);
+  const timeout = setTimeout(() => interrupt(408), timeoutMs);
+  request.signal.addEventListener("abort", onAbort, { once: true });
+  if (request.signal.aborted) onAbort();
   const chunks: Uint8Array[] = [];
   let length = 0;
   try {
     while (true) {
-      const { done, value } = await reader.read();
+      const { done, value } = await Promise.race([reader.read(), interrupted]);
+      if (interruptedStatus) return { status: interruptedStatus };
       if (done) break;
       length += value.byteLength;
       if (length > MAX_CONTACT_BYTES) {
-        await reader.cancel();
+        void reader.cancel().catch(() => {});
         return { status: 413 };
       }
       chunks.push(value);
@@ -172,8 +187,10 @@ async function readLimitedJson(request: Request): Promise<{ value?: unknown; sta
     }
     return { value: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) };
   } catch {
-    return { status: 400 };
+    return { status: interruptedStatus ?? 400 };
   } finally {
+    clearTimeout(timeout);
+    request.signal.removeEventListener("abort", onAbort);
     reader.releaseLock();
   }
 }
@@ -184,10 +201,11 @@ type ContactHandlerOptions = {
   fetcher?: typeof fetch;
   now?: () => number;
   timeoutMs?: number;
+  bodyTimeoutMs?: number;
 };
 
 export async function handleContactRequest(request: Request, options: ContactHandlerOptions): Promise<Response> {
-  const { env, rateLimiter, fetcher = fetch, now = Date.now, timeoutMs = 8_000 } = options;
+  const { env, rateLimiter, fetcher = fetch, now = Date.now, timeoutMs = 8_000, bodyTimeoutMs = 5_000 } = options;
   if (!originIsAllowed(request, env.CONTACT_ALLOWED_ORIGINS)) {
     return respond(403, { ok: false, code: "forbidden" });
   }
@@ -202,14 +220,17 @@ export async function handleContactRequest(request: Request, options: ContactHan
       : null;
   const clientKey = address && /^[a-fA-F0-9:.]{3,64}$/.test(address) ? `client:${address}` : "shared";
   const timestamp = now();
-  const globalLimit = rateLimiter.check("global", timestamp, 50);
   const clientLimit = rateLimiter.check(clientKey, timestamp, clientKey === "shared" ? 20 : 5);
-  if (!globalLimit.allowed || !clientLimit.allowed) {
-    const retryAfter = Math.max(globalLimit.retryAfter, clientLimit.retryAfter);
-    return respond(429, { ok: false, code: "rate_limited" }, { "Retry-After": String(retryAfter) });
+  if (!clientLimit.allowed) {
+    return respond(429, { ok: false, code: "rate_limited" }, { "Retry-After": String(clientLimit.retryAfter) });
+  }
+  // Denied clients must not consume the budget shared by other visitors.
+  const globalLimit = rateLimiter.check("global", timestamp, 50);
+  if (!globalLimit.allowed) {
+    return respond(429, { ok: false, code: "rate_limited" }, { "Retry-After": String(globalLimit.retryAfter) });
   }
 
-  const body = await readLimitedJson(request);
+  const body = await readLimitedJson(request, bodyTimeoutMs);
   if (body.status) return respond(body.status, { ok: false, code: body.status === 413 ? "too_large" : "invalid_request" });
   const validation = validateContactInput(body.value);
   if (!validation.valid) {

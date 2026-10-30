@@ -209,3 +209,68 @@ test("the limiter bounds its map and expires old entries", () => {
   assert.equal(limiter.check("three", 0).allowed, false);
   assert.equal(limiter.check("three", 101).allowed, true);
 });
+
+test("denied clients cannot exhaust the budget shared by other visitors", async () => {
+  let deliveries = 0;
+  const settings = options({
+    env: { ...configured, CONTACT_TRUST_PROXY: "cloudflare" },
+    now: () => 100,
+    fetcher: async () => { deliveries++; return Response.json({ id: "test-delivery" }); },
+  });
+  for (let attempt = 0; attempt < 5; attempt++) {
+    assert.equal((await handleContactRequest(request(validInput, { "cf-connecting-ip": "192.0.2.1" }), settings)).status, 200);
+  }
+  for (let attempt = 0; attempt < 45; attempt++) {
+    assert.equal((await handleContactRequest(request(validInput, { "cf-connecting-ip": "192.0.2.1" }), settings)).status, 429);
+  }
+  assert.equal((await handleContactRequest(request(validInput, { "cf-connecting-ip": "192.0.2.2" }), settings)).status, 200);
+  assert.equal(deliveries, 6);
+});
+
+test("the global budget still caps requests from distinct clients and resets", async () => {
+  const settings = options({ env: { CONTACT_TRUST_PROXY: "cloudflare" }, now: () => 100 });
+  for (let client = 1; client <= 10; client++) {
+    for (let attempt = 0; attempt < 5; attempt++) {
+      assert.equal((await handleContactRequest(request(validInput, { "cf-connecting-ip": `192.0.2.${client}` }), settings)).status, 503);
+    }
+  }
+  const fresh = () => request(validInput, { "cf-connecting-ip": "192.0.2.11" });
+  const denied = await handleContactRequest(fresh(), settings);
+  assert.equal(denied.status, 429);
+  assert.equal(denied.headers.get("retry-after"), "600");
+  assert.equal((await handleContactRequest(fresh(), { ...settings, now: () => 600_101 })).status, 503);
+});
+
+test("stalled request bodies have a deadline even if cancellation stalls", { timeout: 1_000 }, async () => {
+  let cancelled = false;
+  let deliveries = 0;
+  const body = new ReadableStream({
+    start(controller) { controller.enqueue(new TextEncoder().encode('{"name":')); },
+    cancel() { cancelled = true; return new Promise(() => {}); },
+  });
+  const input = new Request("https://portfolio.example/api/contact", {
+    method: "POST", headers: { origin: "https://portfolio.example", "content-type": "application/json" },
+    body, duplex: "half",
+  });
+  const response = await handleContactRequest(input, options({ bodyTimeoutMs: 5, fetcher: async () => { deliveries++; } }));
+  assert.equal(response.status, 408);
+  assert.equal(cancelled, true);
+  assert.equal(deliveries, 0);
+});
+
+test("an aborted upload cancels body reading without contacting the provider", { timeout: 1_000 }, async () => {
+  for (const alreadyAborted of [false, true]) {
+    let cancelled = false;
+    const controller = new AbortController();
+    const body = new ReadableStream({ cancel() { cancelled = true; } });
+    const input = new Request("https://portfolio.example/api/contact", {
+      method: "POST", headers: { origin: "https://portfolio.example", "content-type": "application/json" },
+      body, duplex: "half", signal: controller.signal,
+    });
+    if (alreadyAborted) controller.abort();
+    const response = handleContactRequest(input, options({ fetcher: async () => { assert.fail("Aborted body must not send mail"); } }));
+    controller.abort();
+    assert.equal((await response).status, 400);
+    assert.equal(cancelled, true);
+  }
+});

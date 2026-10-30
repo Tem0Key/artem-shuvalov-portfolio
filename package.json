@@ -13,7 +13,8 @@
     "start": "next start --hostname 127.0.0.1 --port 3000",
     "dev:site": "node scripts/run-framework.mjs dev",
     "preview:site": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
+    "audit:security": "npm audit --omit=dev --audit-level=high && npm audit --audit-level=critical",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "build:pages": "node scripts/build-pages.mjs"
   },
@@ -21,32 +22,32 @@
     "clsx": "2.1.1",
     "lucide-react": "^1.31.0",
     "motion": "^12.23.24",
-    "next": "16.3.4",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
+    "next": "16.4.1",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "tailwind-merge": "3.6.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
-    "@cloudflare/workers-types": "4.20260515.1",
+    "@cloudflare/vite-plugin": "1.64.0",
+    "@cloudflare/workers-types": "5.20261015.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
+    "@vitejs/plugin-rsc": "0.5.37",
     "json-rpc-2.0": "1.7.1",
     "raw-body": "3.0.2",
-    "react-server-dom-webpack": "19.2.6",
+    "react-server-dom-webpack": "19.2.9",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
-    "vinext": "1.0.0-beta.5",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "vinext": "1.2.0",
+    "vite": "8.3.4",
+    "wrangler": "4.151.0"
   },
   "overrides": {
-    "miniflare": {
-      "sharp": "0.35.4"
+    "satori": {
+      "fflate": "0.7.5"
     }
   }
 }

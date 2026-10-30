@@ -33,7 +33,7 @@ const copy = {
     projectsTitle: "Building tools that solve real problems.",
     projectsIntro: "Practical automation, built around the problems I encountered in security engineering.",
     demo: "Illustrative preview",
-    deviation: "DEVIATION IDENTIFIED",
+    deviation: "Deviation identified",
     project1Title: "Configuration audit,\nautomated.",
     project1Name: "Automated FPSU Configuration Audit Tool",
     project1Body: "A Python utility that compares Amicon FPSU configurations with reference files to surface deviations and potential misconfigurations.",
@@ -46,7 +46,7 @@ const copy = {
     pythonTag: "Configuration analysis",
     internalTag: "Internal tooling",
     dashboardTitle: "Operations workspace",
-    dashboardLabel: "SERVICE WORKFLOW",
+    dashboardLabel: "Service workflow",
     dashboardActive: "In progress",
     dashboardReview: "Under review",
     dashboardDone: "Recorded",
@@ -106,7 +106,7 @@ const copy = {
     projectsTitle: "Инструменты, которые решают реальные задачи.",
     projectsIntro: "Практическая автоматизация задач, с которыми я сталкивался в работе инженера по безопасности.",
     demo: "Демонстрация интерфейса",
-    deviation: "ОБНАРУЖЕНО ОТКЛОНЕНИЕ",
+    deviation: "Обнаружено отклонение",
     project1Title: "Аудит конфигураций.\nАвтоматически.",
     project1Name: "Инструмент аудита конфигураций ФПСУ",
     project1Body: "Python-утилита для сравнения конфигураций Амикон ФПСУ с эталонными файлами и выявления отклонений и потенциальных ошибок настройки.",
@@ -119,7 +119,7 @@ const copy = {
     pythonTag: "Анализ конфигураций",
     internalTag: "Внутренний инструмент",
     dashboardTitle: "Операционная панель",
-    dashboardLabel: "ОБРАБОТКА ЗАЯВОК",
+    dashboardLabel: "Обработка заявок",
     dashboardActive: "В работе",
     dashboardReview: "Проверка",
     dashboardDone: "Записано",
@@ -160,8 +160,7 @@ const skillIcons = [Network, Radar, Route, Braces];
 
 function Heading({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
   return (
-    <div className="ps-heading">
-      <p className="section-eyebrow">{eyebrow}</p>
+    <div className="ps-heading" aria-label={eyebrow.replace(/^\d+ \/ /, "")}>
       <h2 className="section-title ps-title">{title}</h2>
       {description && <p className="ps-section-description">{description}</p>}
     </div>
@@ -181,7 +180,7 @@ export function PortfolioSections({ lang }: { lang: Language }) {
   const t = copy[lang];
   return (
     <div className="container ps-sections">
-      <section className="section-shell ps-experience" id="experience" aria-label={t.experienceTitle}>
+      <section tabIndex={-1} className="section-shell ps-experience" id="experience" aria-label={t.experienceTitle}>
         <Heading eyebrow={t.experienceEyebrow} title={t.experienceTitle} description={t.experienceIntro} />
         <div className="ps-timeline">
           <article className="ps-timeline-item ps-timeline-item-featured">
@@ -217,14 +216,14 @@ export function PortfolioSections({ lang }: { lang: Language }) {
         </div>
       </section>
 
-      <section className="section-shell ps-projects" id="projects" aria-label={t.projectsTitle}>
+      <section tabIndex={-1} className="section-shell ps-projects" id="projects" aria-label={t.projectsTitle}>
         <Heading eyebrow={t.projectsEyebrow} title={t.projectsTitle} description={t.projectsIntro} />
         <div className="ps-project-grid">
           <article className="ps-project-card ps-project-audit">
-            <div className="ps-project-topline"><span><Terminal size={14} aria-hidden="true" /> PYTHON / 01</span><ArrowDownRight size={21} aria-hidden="true" /></div>
+            <div className="ps-project-topline"><span><Terminal size={14} aria-hidden="true" /> Python / 01</span><ArrowDownRight size={21} aria-hidden="true" /></div>
             <h3 className="ps-project-title">{t.project1Title}</h3>
             <div className="ps-terminal-preview" aria-label={t.demo}>
-              <div className="ps-window-top"><span className="ps-window-dots"><i /><i /><i /></span><span>fpsu-audit.py</span><span className="ps-demo-label">{t.demo}</span></div>
+              <div className="ps-preview-caption"><span>fpsu-audit.py</span><span className="ps-demo-label">{t.demo}</span></div>
               <div className="ps-terminal-body">
                 <p className="ps-command"><span>›</span> python audit.py --section vpn</p>
                 <p className="ps-code-comment"># compare / reference → device</p>
@@ -233,37 +232,37 @@ export function PortfolioSections({ lang }: { lang: Language }) {
                 <p className="ps-code-line ps-code-delete"><span className="ps-code-number">−</span>&nbsp;&nbsp;policy: default</p>
                 <p className="ps-code-line ps-code-add"><span className="ps-code-number">+</span>&nbsp;&nbsp;policy: reference</p>
                 <p className="ps-code-line"><span className="ps-code-number">05</span><span className="ps-code-neutral">&nbsp;&nbsp;route:</span> reviewed</p>
-                <div className="ps-terminal-result"><span className="ps-result-dot" /> {t.deviation} <span>↗</span></div>
+                <div className="ps-terminal-result">{t.deviation}</div>
               </div>
             </div>
             <div className="ps-project-content"><div className="ps-project-tags"><span>Python</span><span>Amicon FPSU</span><span>{t.pythonTag}</span></div><h4>{t.project1Name}</h4><p>{t.project1Body}</p><Highlights title={t.highlights} items={t.project1Highlights} /></div>
           </article>
           <article className="ps-project-card ps-project-operations">
-            <div className="ps-project-topline"><span><Workflow size={14} aria-hidden="true" /> JAVASCRIPT / 02</span><ArrowDownRight size={21} aria-hidden="true" /></div>
+            <div className="ps-project-topline"><span><Workflow size={14} aria-hidden="true" /> JavaScript / 02</span><ArrowDownRight size={21} aria-hidden="true" /></div>
             <h3 className="ps-project-title">{t.project2Title}</h3>
             <div className="ps-dashboard-preview" aria-label={t.demo}>
-              <div className="ps-window-top"><span className="ps-dashboard-mark"><Network size={12} aria-hidden="true" /></span><span>{t.dashboardTitle}</span><span className="ps-demo-label">{t.demo}</span></div>
+              <div className="ps-preview-caption"><span className="ps-dashboard-mark"><Network size={12} aria-hidden="true" /></span><span>{t.dashboardTitle}</span><span className="ps-demo-label">{t.demo}</span></div>
               <div className="ps-dashboard-body">
-                <div className="ps-dashboard-heading"><span>{t.dashboardLabel}</span><span className="ps-online-indicator" /></div>
+                <div className="ps-dashboard-heading"><span>{t.dashboardLabel}</span></div>
                 <div className="ps-workflow-diagram"><span><FileCode2 size={20} aria-hidden="true" /></span><i /><span><Activity size={20} aria-hidden="true" /></span><i /><span><Check size={20} aria-hidden="true" /></span></div>
                 <div className="ps-dashboard-records">{t.dashboardRows.map((name, i) => <div key={name}><span className="ps-record-icon"><span /></span><span>{name}</span><small className={`ps-record-status ps-status-${i}`}>{[t.dashboardActive, t.dashboardReview, t.dashboardDone][i]}</small></div>)}</div>
-                <div className="ps-dashboard-foot"><div className="ps-avatar-stack"><span>AS</span><span>+9</span></div><span><strong>10+</strong> {t.users}</span><span className="ps-micro-chart"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span></div>
+                <div className="ps-dashboard-foot"><span><strong>10+</strong> {t.users}</span></div>
               </div>
             </div>
-            <div className="ps-project-content"><div className="ps-project-tags"><span>JavaScript</span><span>HTML / CSS</span><span>{t.internalTag}</span></div><h4>{t.project2Name}</h4><p>{t.project2Body}</p><Highlights title={t.highlights} items={t.project2Highlights} /></div>
+            <div className="ps-project-content"><div className="ps-project-tags"><span>JavaScript</span><span><abbr title="HTML and CSS">HTML / CSS</abbr></span><span>{t.internalTag}</span></div><h4>{t.project2Name}</h4><p>{t.project2Body}</p><Highlights title={t.highlights} items={t.project2Highlights} /></div>
           </article>
         </div>
       </section>
 
-      <section className="section-shell ps-skills" id="skills" aria-label={t.skillsTitle}>
+      <section tabIndex={-1} className="section-shell ps-skills" id="skills" aria-label={t.skillsTitle}>
         <Heading eyebrow={t.skillsEyebrow} title={t.skillsTitle} description={t.skillsIntro} />
         <div className="ps-skills-grid">{t.skillGroups.map((group, i) => { const Icon = skillIcons[i]; return <article className="ps-skill-card" key={group.title}><div className="ps-skill-top"><span className="ps-skill-icon"><Icon size={23} strokeWidth={1.5} aria-hidden="true" /></span><span className="ps-skill-index">0{i + 1}</span></div><h3>{group.title}</h3><p>{group.description}</p><ul>{group.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul></article>; })}</div>
       </section>
 
-      <section className="section-shell ps-education" id="education" aria-label={t.educationTitle}>
+      <section tabIndex={-1} className="section-shell ps-education" id="education" aria-label={t.educationTitle}>
         <Heading eyebrow={t.educationEyebrow} title={t.educationTitle} />
         <div className="ps-education-grid">
-          <div className="ps-degree-column"><h3 className="ps-list-heading"><GraduationCap size={17} aria-hidden="true" />{t.educationLabel}</h3><article className="ps-degree"><div className="ps-degree-meta"><span>01</span><span>{t.mastersDate}</span></div><h4>{t.itmo}</h4><p className="ps-degree-name">{t.masters}</p><p className="ps-thesis">{t.mastersThesis}</p></article><article className="ps-degree"><div className="ps-degree-meta"><span>02</span><span>{t.bachelorsDate}</span></div><h4>{t.gut}</h4><p className="ps-degree-name">{t.bachelors}</p><p className="ps-thesis">{t.bachelorsThesis}</p></article></div>
+          <div className="ps-degree-column"><h3 className="ps-list-heading"><GraduationCap size={17} aria-hidden="true" />{t.educationLabel}</h3><article className="ps-degree"><p className="ps-degree-meta"><time>{t.mastersDate}</time></p><h4>{t.itmo}</h4><p className="ps-degree-name">{t.masters}</p><p className="ps-thesis">{t.mastersThesis}</p></article><article className="ps-degree"><p className="ps-degree-meta"><time>{t.bachelorsDate}</time></p><h4>{t.gut}</h4><p className="ps-degree-name">{t.bachelors}</p><p className="ps-thesis">{t.bachelorsThesis}</p></article></div>
           <div className="ps-learning-column"><h3 className="ps-list-heading">{t.certificationsLabel}</h3><div className="ps-certificates">{t.certs.map((cert) => <article className="ps-certificate" key={cert.title}><span className="ps-cert-symbol"><Check size={14} aria-hidden="true" /></span><div><h4>{cert.title}</h4><p>{cert.provider}</p></div><span className="ps-cert-date">{cert.date}</span></article>)}</div><div className="ps-languages"><h3 className="ps-list-heading">{t.languagesLabel}</h3><div>{t.languages.map(([name, level]) => <p key={name}><span>{name}</span><strong>{level}</strong></p>)}</div></div></div>
         </div>
       </section>

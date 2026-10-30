@@ -1,0 +1,26 @@
+/* Hallmark · shape: kept · genre: modern-minimal · theme: brand · redesign: restyle
+ * paper: #070809 · accent: #f0a15a · display: Inter · body: Inter · hero: kept · nav: floating bar · footer: inline mast · signature: original network SVG
+ * axes: dark/Inter/amber-cyan · posture: restrained · job: hire · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V3 · weakest: V, the existing section composition is retained for recognisability */
+* , *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--space-112); scrollbar-color: var(--quiet) var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 var(--sans); -webkit-font-smoothing: antialiased; caret-color: var(--cyan); }
+::selection { background: var(--selection); color: var(--text); }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+section[tabindex='-1']:focus:not(:focus-visible) { outline: none; }
+a { color: inherit; text-decoration: none; text-underline-offset: .25em; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button, a { touch-action: manipulation; }
+button { cursor: pointer; }
+button:disabled, input:disabled, textarea:disabled { opacity: .55; cursor: not-allowed; }
+button:active:not(:disabled), .button-primary:active, .button-secondary:active { transform: translateY(1px); }
+button[aria-busy='true'] { cursor: progress; }
+img, svg { display: block; }
+img { max-width: 100%; height: auto; }
+h1,h2,h3,h4,p { margin: 0; }
+h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 500; min-width: 0; overflow-wrap: break-word; text-wrap: balance; }
+p { text-wrap: pretty; }
+[hidden] { display: none !important; }
+.container { width: calc(100% - var(--gutter) * 2); max-width: var(--container); margin-inline: auto; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
